@@ -8,7 +8,7 @@ openai-whisper>=2023.6.0
 google-generativeai>=0.3.0
 pillow>=9.0.0
 requests>=2.28.0
-git+https://github.com/ShivangKakkar/googletrans.git@master  # Specific fork of googletrans
+googletrans-py
 sentence-transformers>=2.2.2
 scikit-learn>=1.0.2
 pinecone-client>=3.0.0
