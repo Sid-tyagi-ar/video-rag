@@ -6,7 +6,7 @@ import os
 import shutil
 import webvtt  
 import whisper
-from google.generativeai as genai
+import google.generativeai as genai
 import PIL.Image
 import time
 import requests
