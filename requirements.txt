@@ -5,10 +5,11 @@ pathlib2>=2.3.7
 yt-dlp>=2023.11.16
 webvtt-py>=0.4.6  # For parsing WebVTT subtitle files
 openai-whisper>=2023.6.0
-google-generativeai>=0.3.0
+google>=0.3.0
 pillow>=9.0.0
 requests>=2.28.0
 googletrans-py
 sentence-transformers>=2.2.2
 scikit-learn>=1.0.2
 pinecone-client>=3.0.0
+torch
