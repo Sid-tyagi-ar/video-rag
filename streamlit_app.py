@@ -66,7 +66,7 @@ with st.sidebar:
 
 # Process video on submit
 if submit_button:
-    GEMINI_API_KEY = "AIzaSyBONHUXH3OBRRsmsZy0w0yS7k4AJ3NLvqM"  # Replace with st.secrets["GOOGLE"]["api_key"]
+    GEMINI_API_KEY = "your key"  
     video_id = Video_processor().extract_video_id(url)
     
     # Check if video is already downloaded
