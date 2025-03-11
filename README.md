@@ -3,6 +3,7 @@
 ## Overview
 
 Video RAG Explorer is a Streamlit application that uses Retrieval-Augmented Generation (RAG) to allow users to query and extract information from YouTube videos. The application downloads videos, processes their content (including audio transcription and keyframe extraction), and creates a searchable knowledge graph that enables natural language queries about the video content.
+Demo - https://drive.google.com/file/d/1pAsfIFLpO2ndYCHLqYuKywgswaGIkYOC/view?usp=sharing
 
 ## Features
 
