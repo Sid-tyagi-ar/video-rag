@@ -1,2 +1,165 @@
-# video-rag
-video based rag system
+# Video RAG Explorer
+
+## Overview
+
+Video RAG Explorer is a Streamlit application that uses Retrieval-Augmented Generation (RAG) to allow users to query and extract information from YouTube videos. The application downloads videos, processes their content (including audio transcription and keyframe extraction), and creates a searchable knowledge graph that enables natural language queries about the video content.
+
+## Features
+
+- YouTube video download and processing
+- Automatic transcription using Whisper and translation if needed
+- Intelligent keyframe extraction and scene description using Gemini
+- Creation of a semantic knowledge graph from video content
+- Natural language querying of video content
+- Visual exploration of video keyframes
+- Time-stamped responses linked to video segments
+
+## Prerequisites
+
+- Python 3.8+
+- FFmpeg installed on your system
+- Google Cloud API key for Gemini
+- Pinecone API key
+
+## Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/yourusername/video-rag-explorer.git
+cd video-rag-explorer
+```
+
+### 2. Create a virtual environment
+
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+### 3. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+If you don't have a requirements.txt file, create one with the following packages:
+
+```
+streamlit
+opencv-python
+numpy
+pathlib
+yt-dlp
+webvtt-py
+openai-whisper
+google-generativeai
+Pillow
+requests
+googletrans-py
+sentence-transformers
+scikit-learn
+pinecone-client
+```
+
+### 4. Install FFmpeg
+
+#### On Ubuntu/Debian:
+```bash
+sudo apt update
+sudo apt install ffmpeg
+```
+
+#### On macOS (using Homebrew):
+```bash
+brew install ffmpeg
+```
+
+#### On Windows:
+Install using Chocolatey:
+```bash
+choco install ffmpeg
+```
+Or download from the [official website](https://ffmpeg.org/download.html) and add to PATH.
+
+### 5. Set up API keys
+
+Create a `.env` file in the root directory with the following content:
+
+```
+PINECONE_API_KEY=your_pinecone_api_key
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+Alternatively, update the API keys directly in the `Helper_function.py` file.
+
+## Running the Application
+
+```bash
+streamlit run streamlit_app.py
+```
+
+The application will be available at http://localhost:8501
+
+## How to Use
+
+1. Enter a YouTube URL in the input field and click "Process Video"
+2. Wait for the processing to complete (this may take a few minutes depending on the video length)
+3. Once processing is complete, you'll see keyframes extracted from the video
+4. Enter your query about the video content in the "Ask About the Video" field
+5. Review the AI-generated answer and explore the source timestamps and chunks
+
+## Advanced Mode
+
+Toggle "Advanced Mode" in the sidebar to access additional settings:
+- Max Edge Depth: Controls how many related chunks to consider when retrieving content
+- Bin Size: Adjusts the size of time segments for chunking the video content
+
+## How It Works
+
+### Video Processing Pipeline
+
+1. **Download and Extraction**: The app downloads the YouTube video and its audio track
+2. **Subtitle Extraction**: Attempts to extract existing subtitles from YouTube
+3. **Transcription**: If subtitles aren't available, uses Whisper for audio transcription
+4. **Translation**: Translates non-English content to English if needed
+5. **Keyframe Extraction**: Extracts significant frames using computer vision techniques
+6. **Scene Description**: Uses Gemini to describe the content of keyframes
+
+### RAG System
+
+1. **Chunking**: Divides the transcript into meaningful segments
+2. **Integration**: Combines transcript chunks with keyframe descriptions
+3. **Embedding**: Creates vector embeddings of each chunk
+4. **Graph Building**: Creates a knowledge graph connecting related chunks
+5. **Indexing**: Stores chunks and relationships in Pinecone
+6. **Retrieval**: Finds the most relevant chunks for a query
+7. **Generation**: Uses Gemini to generate answers based on retrieved chunks
+
+## Troubleshooting
+
+- **FFmpeg errors**: Ensure FFmpeg is properly installed and in your PATH
+- **API key errors**: Verify your Pinecone and Gemini API keys are correct
+- **Memory issues**: For long videos, you may need to increase your system's memory or reduce the processing quality
+- **Language support**: For non-English videos, check if the language is supported by Whisper or the translation service
+
+## Resources
+
+- [Streamlit Documentation](https://docs.streamlit.io/)
+- [Pinecone Documentation](https://docs.pinecone.io/)
+- [Gemini API Documentation](https://ai.google.dev/docs)
+- [yt-dlp Documentation](https://github.com/yt-dlp/yt-dlp#readme)
+
+## Cleanup
+
+The application automatically cleans up downloaded files and Pinecone data when you exit. If you need to manually clean up, run:
+
+```bash
+python -c "from Helper_function import VideoRAGRetriever; VideoRAGRetriever().cleanup_namespace('test_session')"
+```
+
+And remove the downloads and keyframes directories:
+
+```bash
+rm -rf downloads keyframes
+```
