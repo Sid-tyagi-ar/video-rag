@@ -116,7 +116,7 @@ Toggle "Advanced Mode" in the sidebar to access additional settings:
 - **API key errors**: Verify your Pinecone and Gemini API keys are correct.
 - **Memory issues**: For long videos, you may need to increase your system's memory or reduce the processing quality.
 - **Language support**: For non-English videos and non-spring-asr coverage videos, check if the language is supported by Whisper.
-- **Gen-ai** - It might be the case that you can get an error using google.generativeai on the local machine, so one can use 'from google import genai' that works too.
+- **Gen-ai** - It might be the case that you can get an error using 'from google import genai' on the local machine, so one can use 'import google.generativeai as genai' that works too.
 And remove the downloads and keyframes directories:
 
 
