@@ -26,8 +26,8 @@ Video RAG Explorer is a Streamlit application that uses Retrieval-Augmented Gene
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/video-rag-explorer.git
-cd video-rag-explorer
+git clone https://github.com/Sid-tyagi-ar/video-rag.git
+cd video-rag
 ```
 
 ### 2. Create a virtual environment
@@ -41,25 +41,6 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 ```bash
 pip install -r requirements.txt
-```
-
-If you don't have a requirements.txt file, create one with the following packages:
-
-```
-streamlit
-opencv-python
-numpy
-pathlib
-yt-dlp
-webvtt-py
-openai-whisper
-google-generativeai
-Pillow
-requests
-googletrans-py
-sentence-transformers
-scikit-learn
-pinecone-client
 ```
 
 ### 4. Install FFmpeg
@@ -80,7 +61,7 @@ Install using Chocolatey:
 ```bash
 choco install ffmpeg
 ```
-Or download from the [official website](https://ffmpeg.org/download.html) and add to PATH.
+You can also download it from the [official website](https://ffmpeg.org/download.html) and add it to PATH.
 
 ### 5. Set up API keys
 
@@ -91,7 +72,7 @@ PINECONE_API_KEY=your_pinecone_api_key
 GEMINI_API_KEY=your_gemini_api_key
 ```
 
-Alternatively, update the API keys directly in the `Helper_function.py` file.
+Alternatively, update the API keys directly in the `Helper_function.py`  and 'streamlit_run.py' file.
 
 ## Running the Application
 
@@ -138,26 +119,11 @@ Toggle "Advanced Mode" in the sidebar to access additional settings:
 
 ## Troubleshooting
 
-- **FFmpeg errors**: Ensure FFmpeg is properly installed and in your PATH
-- **API key errors**: Verify your Pinecone and Gemini API keys are correct
-- **Memory issues**: For long videos, you may need to increase your system's memory or reduce the processing quality
-- **Language support**: For non-English videos, check if the language is supported by Whisper or the translation service
-
-## Resources
-
-- [Streamlit Documentation](https://docs.streamlit.io/)
-- [Pinecone Documentation](https://docs.pinecone.io/)
-- [Gemini API Documentation](https://ai.google.dev/docs)
-- [yt-dlp Documentation](https://github.com/yt-dlp/yt-dlp#readme)
-
-## Cleanup
-
-The application automatically cleans up downloaded files and Pinecone data when you exit. If you need to manually clean up, run:
-
-```bash
-python -c "from Helper_function import VideoRAGRetriever; VideoRAGRetriever().cleanup_namespace('test_session')"
-```
-
+- **FFmpeg errors**: Ensure FFmpeg is properly installed and in your PATH.
+- **API key errors**: Verify your Pinecone and Gemini API keys are correct.
+- **Memory issues**: For long videos, you may need to increase your system's memory or reduce the processing quality.
+- **Language support**: For non-English videos and non-spring-asr coverage videos, check if the language is supported by Whisper.
+- **Gen-ai** - It might be the case that you can get an error using google.generativeai on the local machine, so one can use 'from google import genai' that works too.
 And remove the downloads and keyframes directories:
 
 ```bash
