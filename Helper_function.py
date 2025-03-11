@@ -1,3 +1,4 @@
+#%%
 import cv2
 import numpy as np
 from pathlib import Path
@@ -6,7 +7,7 @@ import os
 import shutil
 import webvtt  
 import whisper
-import google.generativeai as genai
+from google import genai
 import PIL.Image
 import time
 import requests
@@ -22,9 +23,11 @@ import re
 import logging
 import json
 
+#%%
 
 INDEX_NAME = "video-rag"
-Pinecone_api_key = st.secrets["PINECONE"]["api_key"]
+Pinecone_api_key = "Your key"
+gemini_api_key = "Your key"
 pc = Pinecone(api_key=Pinecone_api_key)
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
@@ -53,6 +56,7 @@ class Video_processor:
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
+            
         return video_file
 
     def download_audio(self, url, audio_format="mp3"):
@@ -391,26 +395,50 @@ class VideoRAGChunker:
         return bin_descriptions
 
     def integrate_keyframes(self, bins, keyframe_descs):
-        keyframes = sorted(keyframe_descs.items(), key=lambda x: x[1]["timestamp"])
-        max_keyframe_ts = max(info["timestamp"] for _, info in keyframes) if keyframes else 0
-        max_bin_end = max(b["end"] for b in bins) if bins else 0
-        total_duration = max(max_bin_end, max_keyframe_ts)
-        num_bins = math.ceil(total_duration / self.bin_size)
+        if not keyframe_descs:
+            logging.warning("No keyframes provided. Returning bins with empty text if not set.")
+            # Ensure all bins have a 'text' key, even if empty
+            for b in bins:
+                if "text" not in b:
+                    b["text"] = ""
+            return bins
 
-        if num_bins > len(bins):
-            for i in range(len(bins), num_bins):
-                bins.append({"start": i * self.bin_size, "end": min((i + 1) * self.bin_size, total_duration), "text": ""})
+        try:
+            # Sort keyframes by timestamp
+            keyframes = sorted(keyframe_descs.items(), key=lambda x: x[1]["timestamp"])
+            max_keyframe_ts = max(info["timestamp"] for _, info in keyframes) if keyframes else 0
+            max_bin_end = max(b["end"] for b in bins) if bins else 0
+            total_duration = max(max_bin_end, max_keyframe_ts)
+            num_bins = math.ceil(total_duration / self.bin_size)
 
-        for _, info in keyframes:
-            ts = info["timestamp"]
-            desc = f"The video has scenes showcasing: {info['desc']}"
-            bin_idx = int(ts // self.bin_size)
-            if bin_idx < len(bins):
-                bins[bin_idx]["text"] = bins[bin_idx]["text"] + " " + desc if bins[bin_idx]["text"] else desc
+            # Extend bins if necessary
+            if num_bins > len(bins):
+                for i in range(len(bins), num_bins):
+                    bins.append({
+                        "start": i * self.bin_size,
+                        "end": min((i + 1) * self.bin_size, total_duration),
+                        "text": ""
+                    })
 
-        bins = [b for b in bins if b["text"]]
-        logging.info(f"Integrated keyframes, final bins: {len(bins)}")
-        return bins
+            # Integrate keyframes into bins
+            for _, info in keyframes:
+                ts = info["timestamp"]
+                desc = f"The video has scenes showcasing: {info['desc']}"
+                bin_idx = int(ts // self.bin_size)
+                if bin_idx < len(bins):
+                    bins[bin_idx]["text"] = bins[bin_idx]["text"] + " " + desc if bins[bin_idx]["text"] else desc
+
+            # Ensure all bins have a 'text' key, even if empty, and don’t filter out empty bins
+            for b in bins:
+                if "text" not in b:
+                    b["text"] = ""
+
+            logging.info(f"Integrated keyframes, final bins: {len(bins)}")
+            return bins
+
+        except Exception as e:
+            logging.error(f"Error integrating keyframes: {str(e)}")
+            raise
     
     def build_graph(self, bins, video_id):
         nodes = [{"id": f"{video_id}_{i}", "chunk": {"text": bin["text"], "timestamp_coverage": [{"start": bin["start"], "end": bin["end"]}]}} 
@@ -473,7 +501,7 @@ def process_video_rag(transcript_file, keyframe_descs=None, video_metadata=None)
 class VideoRAGRetriever:
     def __init__(self):
         self.model = SentenceTransformer('all-MiniLM-L6-v2')
-        self.client = genai.Client(api_key=st.secrets["Gemini"]["api_key"])
+        self.client = genai.Client(api_key=gemini_api_key)
         self.index = pc.Index(INDEX_NAME)
 
     def retrieve_chunks(self, query, video_id, top_k=1, max_edge_depth=3, namespace="temp"):
