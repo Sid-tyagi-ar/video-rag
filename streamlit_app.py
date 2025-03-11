@@ -2,7 +2,7 @@ import streamlit as st
 import os
 import shutil
 import atexit
-from .Helper_function import Video_processor, VideoRAGChunker, VideoRAGRetriever  
+from Helper_function import Video_processor, VideoRAGChunker, VideoRAGRetriever  
 import logging
 
 # Setup logging
