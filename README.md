@@ -126,6 +126,4 @@ Toggle "Advanced Mode" in the sidebar to access additional settings:
 - **Gen-ai** - It might be the case that you can get an error using google.generativeai on the local machine, so one can use 'from google import genai' that works too.
 And remove the downloads and keyframes directories:
 
-```bash
-rm -rf downloads keyframes
-```
+
