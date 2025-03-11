@@ -14,7 +14,6 @@ import requests
 from googletrans import Translator
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
 import os
 from pinecone import Pinecone, ServerlessSpec
 import math
