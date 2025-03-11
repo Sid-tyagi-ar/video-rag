@@ -116,11 +116,8 @@ Toggle "Advanced Mode" in the sidebar to access additional settings:
 - **FFmpeg errors**: Ensure FFmpeg is properly installed and in your PATH.
 - **API key errors**: Verify your Pinecone and Gemini API keys are correct.
 - **Memory issues**: For long videos, you may need to increase your system's memory or reduce the processing quality.
+- **Language support**: For non-English videos and non-spring-asr coverage videos, check if the language is supported by Whisper.
+- **Gen-ai** - It might be the case that you can get an error using 'from google import genai' on the local machine, so one can use 'import google.generativeai as genai' that works too.
 
 ## Notes
 - Usage of pikachu running gif to make the loading appealing and also keyframe detection would take major time so while watching demo prefer 2x during that portion, thanks 
-- **Language support**: For non-English videos and non-spring-asr coverage videos, check if the language is supported by Whisper.
-- **Gen-ai** - It might be the case that you can get an error using 'from google import genai' on the local machine, so one can use 'import google.generativeai as genai' that works too.
-And remove the downloads and keyframes directories:
-
-
