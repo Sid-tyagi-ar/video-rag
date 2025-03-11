@@ -65,14 +65,7 @@ You can also download it from the [official website](https://ffmpeg.org/download
 
 ### 5. Set up API keys
 
-Create a `.env` file in the root directory with the following content:
-
-```
-PINECONE_API_KEY=your_pinecone_api_key
-GEMINI_API_KEY=your_gemini_api_key
-```
-
-Alternatively, update the API keys directly in the `Helper_function.py`  and 'streamlit_run.py' file.
+ Update the API keys directly in the `Helper_function.py`  and 'streamlit_run.py' file.
 
 ## Running the Application
 
